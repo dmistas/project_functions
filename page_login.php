@@ -1,3 +1,7 @@
+<?php
+    include_once "functions.php";
+    session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -33,13 +37,17 @@
             </a>
         </div>
         <div class="card p-4 border-top-left-radius-0 border-top-right-radius-0">
+            <?php if (isset($_SESSION['success_registration'])): ?>
             <div class="alert alert-success">
-                Регистрация успешна
+                <?php display_flash_message('success_registration'); ?>
             </div>
+            <?php endif; ?>
             <form action="">
                 <div class="form-group">
                     <label class="form-label" for="username">Email</label>
-                    <input type="email" id="username" class="form-control" placeholder="Эл. адрес" value="">
+                    <input type="email" id="username" class="form-control" placeholder="<?php
+                    (isset($_SESSION['email']))?display_flash_message('email'):"Эл. адрес"
+                    ?>">
                 </div>
                 <div class="form-group">
                     <label class="form-label" for="password">Пароль</label>
