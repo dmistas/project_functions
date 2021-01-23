@@ -1,6 +1,6 @@
 <?php
-include_once 'functions.php';
 session_start();
+include_once 'functions.php';
 ?>
 
 <!DOCTYPE html>
@@ -71,7 +71,7 @@ session_start();
                                     <div class="alert alert-danger text-dark" role="alert">
                                         <?php display_flash_message("danger_email_already_in_use"); ?>
                                     </div>
-                                <?php endif;?>
+                                <?php endif; ?>
                                 <form id="js-login" novalidate="" action="register.php" method="post">
                                     <div class="form-group">
                                         <label class="form-label" for="emailverify">Email</label>

@@ -1,4 +1,4 @@
 <?php
-include_once 'functions.php';
 session_start();
+include_once 'functions.php';
 d($_SESSION);
