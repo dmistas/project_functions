@@ -67,11 +67,9 @@ include_once 'functions.php';
                         <div class="col-xl-6 ml-auto mr-auto">
                             <div class="card p-4 rounded-plus bg-faded">
                                 <?php
-                                if (isset($_SESSION['danger_email_already_in_use'])): ?>
-                                    <div class="alert alert-danger text-dark" role="alert">
-                                        <?php display_flash_message("danger_email_already_in_use"); ?>
-                                    </div>
-                                <?php endif; ?>
+                                if (isset($_SESSION['danger'])) {
+                                    display_flash_message("danger");
+                                } ?>
                                 <form id="js-login" novalidate="" action="register.php" method="post">
                                     <div class="form-group">
                                         <label class="form-label" for="emailverify">Email</label>
