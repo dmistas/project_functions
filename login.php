@@ -1,6 +1,4 @@
 <?php
-<<<<<<< HEAD
-=======
 session_start();
 include_once 'functions.php';
 
@@ -15,5 +13,3 @@ if (authorisation_user($login_email, $login_password)){
     redirect_to('page_login.php');
 }
 
-
->>>>>>> 9cfa121e518e4e66d2a067893d66caaecb51c7b3
