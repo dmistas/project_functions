@@ -7,6 +7,27 @@
 include_once 'db.php';
 
 /**
+ * Функция авторизации пользователя
+ *
+ * @param string $email
+ * @param string $password
+ *
+ * @return boolean
+ */
+function authorisation_user($email, $password)
+{
+    $db_user = get_user_by_email($email);
+    if ($db_user && ($db_user['password'] === $password)) {
+        $_SESSION['user'] = $db_user['email'];
+        return true;
+    } else {
+        set_flash_message('auth_error', 'Данная пара логин пароль не найдена');
+        return false;
+    }
+}
+
+
+/**
  * Функция отладки. Останавливает работу проргаммы выводя значение переменной
  *
  * @param null $value
@@ -53,10 +74,10 @@ function add_user($email, $password)
     global $pdo;
 
     $query = "INSERT INTO users(email, password) VALUES (:email, :password)";
-    $params = ['email'=>$email, 'password'=>$password];
+    $params = ['email' => $email, 'password' => $password];
     $statement = $pdo->prepare($query);
     $statement->execute($params);
-    if ($statement->rowCount()){
+    if ($statement->rowCount()) {
         $user = get_user_by_email($email);
         return $user['id'];
     }
@@ -89,7 +110,9 @@ function set_flash_message($name, $message)
 
 function display_flash_message($name)
 {
-    echo isset($_SESSION[$name])?$_SESSION[$name]:"";
+    if (isset($_SESSION[$name])){
+        echo "<div class=\"alert alert-$name\">$_SESSION[$name]</div>";
+    }
     unset($_SESSION[$name]);
 }
 
@@ -106,6 +129,7 @@ function redirect_to($path)
 {
     header("Location: $path");
 }
+
 
 
 
