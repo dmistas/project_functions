@@ -7,6 +7,29 @@
 include_once 'db.php';
 
 /**
+ * Проверка является ли пользователь администратором
+ *
+ * @param array $user user['role']=0 == администратор
+ *
+ * @return boolean
+ */
+function is_admin(array $user)
+{
+    return boolval(!$user['role']);
+}
+
+
+/**
+ * Проверка авторизации пользователя
+ *
+ * @return boolean
+ */
+function is_not_logged_in()
+{
+    return (!isset($_SESSION['user']) && empty($_SESSION['user']));
+}
+
+/**
  * Функция авторизации пользователя
  *
  * @param string $email
@@ -14,7 +37,7 @@ include_once 'db.php';
  *
  * @return boolean
  */
-function authorisation_user($email, $password)
+function authorisation_user(string $email, string $password)
 {
     $db_user = get_user_by_email($email);
     if ($db_user && ($db_user['password'] === $password)) {
@@ -25,7 +48,6 @@ function authorisation_user($email, $password)
         return false;
     }
 }
-
 
 /**
  * Функция отладки. Останавливает работу проргаммы выводя значение переменной
@@ -42,6 +64,20 @@ function d($value = null, $die = 1)
 }
 
 /**
+ * Получение всех пользователей
+ *
+ * @return array
+ */
+function get_all_users()
+{
+    global $pdo;
+    $query = "SELECT * FROM users";
+    $statement = $pdo->prepare($query);
+    $statement->execute();
+    return $statement->fetchAll(PDO::FETCH_ASSOC);
+}
+
+/**
  * Поиск пользователя по email
  *
  * @param string $email
@@ -49,7 +85,7 @@ function d($value = null, $die = 1)
  * @return array
  */
 
-function get_user_by_email($email)
+function get_user_by_email(string $email)
 {
     global $pdo;
     $query = "SELECT * FROM users WHERE email = (:email)";
@@ -58,7 +94,6 @@ function get_user_by_email($email)
     $statement->execute($params);
     return $statement->fetch(PDO::FETCH_ASSOC);
 }
-
 
 /**
  * Добавить пользователя в БД
@@ -69,7 +104,7 @@ function get_user_by_email($email)
  * @return int|boolean (user_id)
  */
 
-function add_user($email, $password)
+function add_user(string $email, string $password)
 {
     global $pdo;
 
@@ -94,7 +129,7 @@ function add_user($email, $password)
  * @return void
  */
 
-function set_flash_message($name, $message)
+function set_flash_message(string $name, string $message)
 {
     $_SESSION[$name] = $message;
 }
@@ -108,9 +143,9 @@ function set_flash_message($name, $message)
  * @return void
  */
 
-function display_flash_message($name)
+function display_flash_message(string $name)
 {
-    if (isset($_SESSION[$name])){
+    if (isset($_SESSION[$name])) {
         echo "<div class=\"alert alert-$name\">$_SESSION[$name]</div>";
     }
     unset($_SESSION[$name]);
@@ -125,7 +160,7 @@ function display_flash_message($name)
  * @return void
  */
 
-function redirect_to($path)
+function redirect_to(string $path)
 {
     header("Location: $path");
 }
