@@ -7,6 +7,87 @@
 include_once 'db.php';
 
 /**
+ * Загрузить изображение аватара
+ *
+ * @param int $user_id
+ * @param array $img
+ *
+ * @return boolean
+ */
+function upload_avatar(int $user_id, array $img)
+{
+    $imgDir = 'img/demo/avatars';
+    d($img,0);
+    if (is_uploaded_file($img['tmp_name'])){
+        $ext = pathinfo($img['name'], PATHINFO_EXTENSION);
+        $imgName =uniqid().".".$ext;
+        $path = "$imgDir/".$imgName;
+        d($path,0);
+        move_uploaded_file($img['tmp_name'], $path);
+        return true;
+    }
+    return false;
+}
+
+/**
+ * Установить статус пользователя
+ *
+ * @param int $user_id
+ * @param string $status
+ *
+ * @return boolean
+ */
+function set_status(int $user_id, string $status)
+{
+    global $pdo;
+
+    $query = "UPDATE users SET status=:status
+              WHERE  id = :id";
+    $params = [
+        'id' => intval($user_id),
+        'status' => $status,
+    ];
+    $statement = $pdo->prepare($query);
+    $statement->execute($params);
+    if ($statement->rowCount()) {
+        return true;
+    }
+    return false;
+}
+
+/**
+ * Редактирование общей информации о пользователе
+ *
+ * @param int $user_id
+ * @param string $name
+ * @param string $job_title
+ * @param string $phone
+ * @param string $address
+ *
+ * @return boolean
+ */
+function edit(int $user_id, string $name, string $job_title, string $phone, string $address)
+{
+    global $pdo;
+
+    $query = "UPDATE users SET name=:name, job_title=:job_title, phone=:phone, address=:address
+              WHERE  id = :id";
+    $params = [
+        'id' => intval($user_id),
+        'name' => $name,
+        'job_title' => $job_title,
+        'phone' => $phone,
+        'address' => $address,
+    ];
+    $statement = $pdo->prepare($query);
+    $statement->execute($params);
+    if ($statement->rowCount()) {
+        return true;
+    }
+    return false;
+}
+
+/**
  * Проверка является ли пользователь администратором
  *
  * @param array $user user['role']=0 == администратор
@@ -47,20 +128,6 @@ function authorisation_user(string $email, string $password)
         set_flash_message('auth_error', 'Данная пара логин пароль не найдена');
         return false;
     }
-}
-
-/**
- * Функция отладки. Останавливает работу проргаммы выводя значение переменной
- *
- * @param null $value
- * @param int $die
- */
-function d($value = null, $die = 1)
-{
-    echo 'Debug: <br><pre>';
-    print_r($value);
-    echo '</pre>';
-    if ($die) die;
 }
 
 /**
@@ -165,6 +232,16 @@ function redirect_to(string $path)
     header("Location: $path");
 }
 
-
-
-
+/**
+ * Функция отладки. Останавливает работу проргаммы выводя значение переменной
+ *
+ * @param null $value
+ * @param int $die
+ */
+function d($value = null, $die = 1)
+{
+    echo 'Debug: <br><pre>';
+    print_r($value);
+    echo '</pre>';
+    if ($die) die;
+}
