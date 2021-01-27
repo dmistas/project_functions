@@ -7,6 +7,33 @@
 include_once 'db.php';
 
 /**
+ * Записать в БД информаци. по социальным сетям
+ *
+ * @param int $user_id
+ * @param string $vk
+ * @param string $telegram
+ * @param string $instagram
+ */
+function set_social_links(int $user_id, string $vk, string $telegram, string $instagram)
+{
+    global $pdo;
+    $query = "UPDATE users SET vk=:vk, telegram=:telegram, instagram=:instagram
+              WHERE  id = :id";
+    $params = [
+        'id' => $user_id,
+        'vk' => $vk,
+        'telegram' => $telegram,
+        'instagram' => $instagram,
+    ];
+    $statement = $pdo->prepare($query);
+    $statement->execute($params);
+    if ($statement->rowCount()) {
+        return true;
+    }
+    return false;
+}
+
+/**
  * Загрузить изображение аватара
  *
  * @param int $user_id
@@ -17,17 +44,44 @@ include_once 'db.php';
 function upload_avatar(int $user_id, array $img)
 {
     $imgDir = 'img/demo/avatars';
-    d($img,0);
-    if (is_uploaded_file($img['tmp_name'])){
+    if (is_uploaded_file($img['tmp_name'])) {
         $ext = pathinfo($img['name'], PATHINFO_EXTENSION);
-        $imgName =uniqid().".".$ext;
-        $path = "$imgDir/".$imgName;
-        d($path,0);
-        move_uploaded_file($img['tmp_name'], $path);
+        $imgName = uniqid() . "." . $ext;
+        $path = "$imgDir/" . $imgName;
+        $is_moved = move_uploaded_file($img['tmp_name'], $path);
+        if ($is_moved) {
+            set_avatar_path($user_id, $path);
+            return true;
+        }
+    }
+    return false;
+}
+
+/**
+ * Записать в БД путь до изображения аватара
+ *
+ * @param int $user_id
+ * @param string $path
+ *
+ * @return boolean
+ */
+function set_avatar_path(int $user_id, string $path)
+{
+    global $pdo;
+    $query = "UPDATE users SET img=:img
+              WHERE  id = :id";
+    $params = [
+        'id' => $user_id,
+        'img' => $path,
+    ];
+    $statement = $pdo->prepare($query);
+    $statement->execute($params);
+    if ($statement->rowCount()) {
         return true;
     }
     return false;
 }
+
 
 /**
  * Установить статус пользователя
@@ -40,11 +94,10 @@ function upload_avatar(int $user_id, array $img)
 function set_status(int $user_id, string $status)
 {
     global $pdo;
-
     $query = "UPDATE users SET status=:status
               WHERE  id = :id";
     $params = [
-        'id' => intval($user_id),
+        'id' => $user_id,
         'status' => $status,
     ];
     $statement = $pdo->prepare($query);
@@ -69,11 +122,10 @@ function set_status(int $user_id, string $status)
 function edit(int $user_id, string $name, string $job_title, string $phone, string $address)
 {
     global $pdo;
-
     $query = "UPDATE users SET name=:name, job_title=:job_title, phone=:phone, address=:address
               WHERE  id = :id";
     $params = [
-        'id' => intval($user_id),
+        'id' => $user_id,
         'name' => $name,
         'job_title' => $job_title,
         'phone' => $phone,
@@ -89,14 +141,13 @@ function edit(int $user_id, string $name, string $job_title, string $phone, stri
 
 /**
  * Проверка является ли пользователь администратором
- *
- * @param array $user user['role']=0 == администратор
+ * $_SESSION['role']=0 == администратор
  *
  * @return boolean
  */
-function is_admin(array $user)
+function is_admin()
 {
-    return boolval(!$user['role']);
+    return boolval(!$_SESSION['role']);
 }
 
 
@@ -122,7 +173,9 @@ function authorisation_user(string $email, string $password)
 {
     $db_user = get_user_by_email($email);
     if ($db_user && ($db_user['password'] === $password)) {
-        $_SESSION['user'] = $db_user['email'];
+        $_SESSION['user'] = $db_user['id'];
+        $_SESSION['role'] = $db_user['role'];
+        $_SESSION['email'] = $db_user['email'];
         return true;
     } else {
         set_flash_message('auth_error', 'Данная пара логин пароль не найдена');
@@ -138,7 +191,7 @@ function authorisation_user(string $email, string $password)
 function get_all_users()
 {
     global $pdo;
-    $query = "SELECT * FROM users";
+    $query = "SELECT * FROM users ORDER BY id desc";
     $statement = $pdo->prepare($query);
     $statement->execute();
     return $statement->fetchAll(PDO::FETCH_ASSOC);
