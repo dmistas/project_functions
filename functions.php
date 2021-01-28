@@ -198,6 +198,24 @@ function get_all_users()
 }
 
 /**
+ * Поиск пользователя по id
+ *
+ * @param int $id
+ *
+ * @return array
+ */
+
+function get_user_by_id(int $id)
+{
+    global $pdo;
+    $query = "SELECT * FROM users WHERE id = (:id)";
+    $params = ['id' => intval($id)];
+    $statement = $pdo->prepare($query);
+    $statement->execute($params);
+    return $statement->fetch(PDO::FETCH_ASSOC);
+}
+
+/**
  * Поиск пользователя по email
  *
  * @param string $email

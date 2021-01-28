@@ -4,11 +4,11 @@ include_once 'functions.php';
 $logged_in_user = [];
 if (is_not_logged_in()) {
     redirect_to('page_login.php');
+    exit();
 } else {
     $logged_in_user = get_user_by_email($_SESSION['email']);
     $all_users = get_all_users();
 }
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -114,20 +114,20 @@ if (is_not_logged_in()) {
                                     </a>
                                 <?php endif; ?>
                                 <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="index.php/edit?id=<?= $user['id'] ?>">
+                                    <a class="dropdown-item" href="edit.php?edit&id=<?= $user['id'] ?>">
                                         <i class="fa fa-edit"></i>
                                         Редактировать</a>
-                                    <a class="dropdown-item" href="security.php/edit?id=<?= $user['id'] ?>">
+                                    <a class="dropdown-item" href="security.php?edit&id=<?= $user['id'] ?>">
                                         <i class="fa fa-lock"></i>
                                         Безопасность</a>
-                                    <a class="dropdown-item" href="status.php/edit?id=<?= $user['id'] ?>">
+                                    <a class="dropdown-item" href="status.php?edit&id=<?= $user['id'] ?>">
                                         <i class="fa fa-sun"></i>
                                         Установить статус</a>
                                     <a class="dropdown-item" href="media.php/edit?id=<?= $user['id'] ?>">
                                         <i class="fa fa-camera"></i>
                                         Загрузить аватар
                                     </a>
-                                    <a href="index.php/delete?id=<?= $user['id'] ?>" class="dropdown-item"
+                                    <a href="index.php?delete&id=<?= $user['id'] ?>" class="dropdown-item"
                                        onclick="return confirm('are you sure?');">
                                         <i class="fa fa-window-close"></i>
                                         Удалить

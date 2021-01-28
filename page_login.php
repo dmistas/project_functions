@@ -42,9 +42,7 @@ include_once "functions.php";
         <form action="login.php" method="post">
             <div class="form-group">
                 <label class="form-label" for="username">Email</label>
-                <input type="email" id="username" class="form-control" name="email" placeholder="<?php
-                (isset($_SESSION['email'])) ? display_flash_message('email') : "Эл. адрес"
-                ?>">
+                <input type="email" id="username" class="form-control" name="email" placeholder="">
             </div>
             <div class="form-group">
                 <label class="form-label" for="password">Пароль</label>
