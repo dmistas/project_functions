@@ -2,14 +2,8 @@
 session_start();
 include_once 'functions.php';
 
-if (is_not_logged_in()) {
-    redirect_to('page_login.php');
-    exit();
-}
 if (isset($_GET['id'])) {
-    if (($_GET['id'] == $_SESSION['user']) || is_admin()) {
-        $edit_user = get_user_by_id(intval($_GET['id']));
-    }
+    $edit_user = get_user_by_id(intval($_GET['id']));
 }
 
 if (isset($_POST['id'])) {
@@ -65,7 +59,8 @@ if (isset($_POST['id'])) {
                                 <label class="form-label" for="simpleinput">Имя</label>
                                 <input type="text" id="simpleinput" class="form-control" name="name"
                                        value="<?= isset($edit_user['name']) ? $edit_user['name'] : "" ?>">
-                                <input type="hidden" name="id" value="<?= isset($edit_user['id']) ? $edit_user['id'] : "" ?>">
+                                <input type="hidden" name="id"
+                                       value="<?= isset($edit_user['id']) ? $edit_user['id'] : "" ?>">
                             </div>
 
                             <!-- title -->
