@@ -34,6 +34,20 @@ function set_social_links(int $user_id, string $vk, string $telegram, string $in
 }
 
 /**
+ * Сформировать имя загружаемого файла uniqid + ext
+ *
+ * @param array $file (массив $_FILES['userfile'])
+ *
+ * @return string
+ */
+function create_upload_file_name(array $file)
+{
+    $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
+    return uniqid() . "." . $ext;
+}
+
+
+/**
  * Загрузить изображение аватара
  *
  * @param int $user_id
@@ -45,8 +59,7 @@ function upload_avatar(int $user_id, array $img)
 {
     $imgDir = 'img/demo/avatars';
     if (is_uploaded_file($img['tmp_name'])) {
-        $ext = pathinfo($img['name'], PATHINFO_EXTENSION);
-        $imgName = uniqid() . "." . $ext;
+        $imgName = create_upload_file_name($img);
         $path = "$imgDir/" . $imgName;
         $is_moved = move_uploaded_file($img['tmp_name'], $path);
         if ($is_moved) {
@@ -133,26 +146,23 @@ function edit(int $user_id, string $name, string $job_title, string $phone, stri
     ];
     $statement = $pdo->prepare($query);
     $statement->execute($params);
-    if ($statement->rowCount()) {
-        return true;
-    }
-    return false;
+    return boolval($statement);
 }
 
 /**
  * Проверка является ли пользователь администратором
- * $_SESSION['role']=0 == администратор
+ * $_SESSION['user']['role']=0 == администратор
  *
  * @return boolean
  */
 function is_admin()
 {
-    return boolval(!$_SESSION['role']);
+    return boolval(!$_SESSION['user']['role']);
 }
 
 
 /**
- * Проверка авторизации пользователя
+ * Проверка пользователь неавторизован = true
  *
  * @return boolean
  */
@@ -169,13 +179,13 @@ function is_not_logged_in()
  *
  * @return boolean
  */
-function authorisation_user(string $email, string $password)
+function login(string $email, string $password)
 {
     $db_user = get_user_by_email($email);
-    if ($db_user && ($db_user['password'] === $password)) {
-        $_SESSION['user'] = $db_user['id'];
-        $_SESSION['role'] = $db_user['role'];
-        $_SESSION['email'] = $db_user['email'];
+    if ($db_user && (password_verify($password, $db_user['password']))) {
+        $_SESSION['user']['id'] = $db_user['id'];
+        $_SESSION['user']['role'] = $db_user['role'];
+        $_SESSION['user']['email'] = $db_user['email'];
         return true;
     } else {
         set_flash_message('auth_error', 'Данная пара логин пароль не найдена');
@@ -247,12 +257,11 @@ function add_user(string $email, string $password)
     global $pdo;
 
     $query = "INSERT INTO users(email, password) VALUES (:email, :password)";
-    $params = ['email' => $email, 'password' => $password];
+    $params = ['email' => $email, 'password' => password_hash($password, PASSWORD_DEFAULT)];
     $statement = $pdo->prepare($query);
     $statement->execute($params);
     if ($statement->rowCount()) {
-        $user = get_user_by_email($email);
-        return $user['id'];
+        return $pdo->lastInsertId();
     }
     return false;
 }

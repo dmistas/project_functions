@@ -6,7 +6,7 @@ if (is_not_logged_in()) {
     redirect_to('page_login.php');
     exit();
 } else {
-    $logged_in_user = get_user_by_email($_SESSION['email']);
+    $logged_in_user = get_user_by_email($_SESSION['user']['email']);
     $all_users = get_all_users();
 }
 ?>

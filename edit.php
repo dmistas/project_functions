@@ -1,7 +1,6 @@
 <?php
 session_start();
 include_once 'functions.php';
-
 if (isset($_GET['id'])) {
     $edit_user = get_user_by_id(intval($_GET['id']));
 }
