@@ -1,15 +1,6 @@
 <?php
 session_start();
 include_once 'functions.php';
-if (is_not_logged_in()) {
-    set_flash_message('danger', 'Необходима авторизация');
-    redirect_to('page_login.php');
-    exit();
-} elseif (!is_admin()) {
-    redirect_to('users.php');
-    exit();
-}
-
 ?>
 
 <!DOCTYPE html>
