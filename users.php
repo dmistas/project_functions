@@ -82,8 +82,7 @@ if (is_not_logged_in()) {
                                         <i class="fal fa-angle-down d-inline-block ml-1 fs-md"></i>
                                     </a>
                                 <?php else: ?>
-                                    <a href="javascript:void(0);" class="fs-xl text-truncate text-truncate-lg text-info"
-                                       data-toggle="dropdown" aria-expanded="false">
+                                    <a href="javascript:void(0);" class="fs-xl text-truncate text-truncate-lg text-info">
                                         <?= $user['name'] ?>
                                     </a>
                                 <?php endif; ?>
@@ -91,7 +90,7 @@ if (is_not_logged_in()) {
                                     <a class="dropdown-item" href="edit.php?edit&id=<?= $user['id'] ?>">
                                         <i class="fa fa-edit"></i>
                                         Редактировать</a>
-                                    <a class="dropdown-item" href="security.php?edit&id=<?= $user['id'] ?>">
+                                    <a class="dropdown-item" href="page_security.php?edit&id=<?= $user['id'] ?>">
                                         <i class="fa fa-lock"></i>
                                         Безопасность</a>
                                     <a class="dropdown-item" href="status.php?edit&id=<?= $user['id'] ?>">

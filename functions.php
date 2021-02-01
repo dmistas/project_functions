@@ -122,6 +122,43 @@ function set_status(int $user_id, string $status)
 }
 
 /**
+ * Проверка соответсвия паролей pass1=pass2 & !empty
+ *
+ * @param string $password
+ * @param string $confirmed_password
+ *
+ * @return boolean
+ */
+function is_valid_passwords(string $password, string $confirmed_password){
+    return ($password===$confirmed_password)&&!empty($password);
+}
+
+/**
+ * Редактирование данных авторизации
+ *
+ * @param int $user_id
+ * @param string $email
+ * @param string $password
+ * @param string $confirmed_password
+ *
+ * @return boolean
+ */
+function edit_credentials(int $user_id, string $email, string $password){
+    global $pdo;
+
+    $query = "UPDATE users SET email=:email, password=:password
+              WHERE  id = :id";
+    $params = [
+        'id' => $user_id,
+        'email' => $email,
+        'password' => password_hash($password, PASSWORD_DEFAULT),
+    ];
+    $statement = $pdo->prepare($query);
+    $statement->execute($params);
+    return boolval($statement);
+}
+
+/**
  * Редактирование общей информации о пользователе
  *
  * @param int $user_id
