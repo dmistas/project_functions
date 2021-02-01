@@ -1,23 +1,37 @@
 <?php
 session_start();
 include_once 'functions.php';
-if (isset($_GET['id'])) {
-    $edit_user = get_user_by_id(intval($_GET['id']));
-}
-
-if (isset($_POST['id'])) {
-    $edit_user = get_user_by_id(intval($_POST['id']));
-    $id = $edit_user['id'];
-    $name = isset($_POST['name']) ? $_POST['name'] : $edit_user['name'];
-    $job_title = isset($_POST['job_title']) ? $_POST['job_title'] : $edit_user['job_title'];
-    $phone = isset($_POST['phone']) ? $_POST['phone'] : $edit_user['phone'];
-    $address = isset($_POST['address']) ? $_POST['address'] : $edit_user['address'];
-    $is_save_user = edit($id, $name, $job_title, $phone, $address);
-    if ($is_save_user) {
-        set_flash_message('success', 'Данные сохранены');
-        redirect_to('users.php');
-        exit();
+// если не авторизован, перенаправляем на login
+if (!is_not_logged_in()) {
+    // если есть GET запрос, получаем пользователя из БД, чтобы подставить значения в форму
+    if (isset($_GET['id'])) {
+        $edit_user = get_user_by_id(intval($_GET['id']));
     }
+    // Проверяем если метод POST
+    if (isset($_POST['id'])) {
+        // Есть ли права на редактирование
+        if (is_admin() || $_POST['id'] == $_SESSION['user']['id']) {
+            $edit_user = get_user_by_id(intval($_POST['id']));
+            $id = $edit_user['id'];
+            $name = isset($_POST['name']) ? $_POST['name'] : $edit_user['name'];
+            $job_title = isset($_POST['job_title']) ? $_POST['job_title'] : $edit_user['job_title'];
+            $phone = isset($_POST['phone']) ? $_POST['phone'] : $edit_user['phone'];
+            $address = isset($_POST['address']) ? $_POST['address'] : $edit_user['address'];
+            $is_save_user = edit($id, $name, $job_title, $phone, $address);
+            if ($is_save_user) {
+                set_flash_message('success', 'Данные сохранены');
+                redirect_to("page_profile.php?id=$id");
+                exit();
+            }
+        } else {
+            set_flash_message('danger', 'Можно редактировать только свой профиль');
+            redirect_to('users.php');
+            exit();
+        }
+    }
+} else {
+    redirect_to('page_login.php');
+    exit();
 }
 ?>
 
