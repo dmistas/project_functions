@@ -53,7 +53,8 @@ function create_upload_file_name(array $file)
  *
  * @return boolean
  */
-function has_image(string $image_path){
+function has_image(string $image_path)
+{
     return file_exists($image_path);
 }
 
@@ -81,6 +82,41 @@ function upload_avatar(int $user_id, array $img)
 }
 
 /**
+ * Удаление изображения пользователя
+ *
+ * @param string $img_path
+ *
+ * @return boolean
+ */
+function delete_img(string $img_path): bool
+{
+    if (has_image($img_path)) {
+        return unlink($img_path);
+    }
+    return false;
+}
+
+/**
+ * Удалить пользователя по id
+ *
+ * @param int $user_id
+ *
+ * @return boolean
+ */
+function delete_user(int $user_id)
+{
+    global $pdo;
+    $query = "DELETE FROM users
+              WHERE  id = :id";
+    $params = [
+        'id' => intval($user_id),
+    ];
+    $statement = $pdo->prepare($query);
+    $statement->execute($params);
+    return boolval($statement);
+}
+
+/**
  * Записать в БД путь до изображения аватара
  *
  * @param int $user_id
@@ -94,7 +130,7 @@ function set_avatar_path(int $user_id, string $path)
     $query = "UPDATE users SET img=:img
               WHERE  id = :id";
     $params = [
-        'id' => $user_id,
+        'id' => intval($user_id),
         'img' => $path,
     ];
     $statement = $pdo->prepare($query);
@@ -139,8 +175,9 @@ function set_status(int $user_id, string $status)
  *
  * @return boolean
  */
-function is_valid_passwords(string $password, string $confirmed_password){
-    return ($password===$confirmed_password)&&!empty($password);
+function is_valid_passwords(string $password, string $confirmed_password)
+{
+    return ($password === $confirmed_password) && !empty($password);
 }
 
 /**
@@ -153,7 +190,8 @@ function is_valid_passwords(string $password, string $confirmed_password){
  *
  * @return boolean
  */
-function edit_credentials(int $user_id, string $email, string $password){
+function edit_credentials(int $user_id, string $email, string $password)
+{
     global $pdo;
 
     $query = "UPDATE users SET email=:email, password=:password
@@ -217,6 +255,19 @@ function is_not_logged_in()
 {
     return (!isset($_SESSION['user']) && empty($_SESSION['user']));
 }
+
+/**
+ * Функция выхода из аккаунта
+ *
+ * @return void
+ */
+function logout()
+{
+    if (isset($_SESSION['user']))
+        unset($_SESSION['user']);
+    session_destroy();
+}
+
 
 /**
  * Функция авторизации пользователя

@@ -7,7 +7,7 @@ if (is_not_logged_in()) {
     exit();
 }
 // Есть ли права на редактирование
-if (!is_admin() ?? $_POST['id'] !== $_SESSION['user']['id']) {
+if (!is_admin() && $_POST['id'] !== $_SESSION['user']['id']) {
     set_flash_message('danger', 'Недостаточно прав для редактирования');
     redirect_to('users.php');
     exit();

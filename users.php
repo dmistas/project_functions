@@ -107,7 +107,7 @@ $set_status_array = [
                                         <i class="fa fa-camera"></i>
                                         Загрузить аватар
                                     </a>
-                                    <a href="index.php?delete&id=<?= $user['id'] ?>" class="dropdown-item"
+                                    <a href="delete.php?delete&id=<?= $user['id'] ?>" class="dropdown-item"
                                        onclick="return confirm('are you sure?');">
                                         <i class="fa fa-window-close"></i>
                                         Удалить

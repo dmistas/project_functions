@@ -65,11 +65,15 @@ include_once 'functions.php';
                             </h2>
                         </div>
                         <div class="col-xl-6 ml-auto mr-auto">
+                            <?php
+                            if (isset($_SESSION['success'])) {
+                                display_flash_message("success");
+                            }
+                            if (isset($_SESSION['danger'])) {
+                                display_flash_message("danger");
+                            }
+                            ?>
                             <div class="card p-4 rounded-plus bg-faded">
-                                <?php
-                                if (isset($_SESSION['danger'])) {
-                                    display_flash_message("danger");
-                                } ?>
                                 <form id="js-login" novalidate="" action="register.php" method="post">
                                     <div class="form-group">
                                         <label class="form-label" for="emailverify">Email</label>
