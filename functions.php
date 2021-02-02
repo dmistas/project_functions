@@ -110,7 +110,7 @@ function set_status(int $user_id, string $status)
     $query = "UPDATE users SET status=:status
               WHERE  id = :id";
     $params = [
-        'id' => $user_id,
+        'id' => intval($user_id),
         'status' => $status,
     ];
     $statement = $pdo->prepare($query);

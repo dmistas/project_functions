@@ -5,10 +5,16 @@ $logged_in_user = [];
 if (is_not_logged_in()) {
     redirect_to('page_login.php');
     exit();
-} else {
-    $logged_in_user = get_user_by_email($_SESSION['user']['email']);
-    $all_users = get_all_users();
 }
+$logged_in_user = get_user_by_email($_SESSION['user']['email']);
+$all_users = get_all_users();
+
+$set_status_array = [
+    'online' => 'success',
+    'offline' => 'danger',
+    'dnd' => 'warning',
+];
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -26,7 +32,7 @@ if (is_not_logged_in()) {
     <link rel="stylesheet" media="screen, print" href="css/fa-regular.css">
 </head>
 <body class="mod-bg-1 mod-nav-link">
-<?php include 'nav_component.php'?>
+<?php include 'nav_component.php' ?>
 <main id="js-page-content" role="main" class="page-content mt-3">
     <?php
     if (isset($_SESSION['success'])) {
@@ -68,7 +74,7 @@ if (is_not_logged_in()) {
                 <div id="c_1" class="card border shadow-0 mb-g shadow-sm-hover" data-filter-tags="<?= $user['name'] ?>">
                     <div class="card-body border-faded border-top-0 border-left-0 border-right-0 rounded-top">
                         <div class="d-flex flex-row align-items-center">
-                                <span class="status status-success mr-3">
+                            <span class="status status-<?= $set_status_array[$user['status']] ?> mr-3">
                                     <span class="rounded-circle profile-image d-block "
                                           style="background-image:url('<?= $user['img'] ?>'); background-size: cover;">
                                     </span>
@@ -82,21 +88,22 @@ if (is_not_logged_in()) {
                                         <i class="fal fa-angle-down d-inline-block ml-1 fs-md"></i>
                                     </a>
                                 <?php else: ?>
-                                    <a href="javascript:void(0);" class="fs-xl text-truncate text-truncate-lg text-info">
+                                    <a href="javascript:void(0);"
+                                       class="fs-xl text-truncate text-truncate-lg text-info">
                                         <?= $user['name'] ?>
                                     </a>
                                 <?php endif; ?>
                                 <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="edit.php?edit&id=<?= $user['id'] ?>">
+                                    <a class="dropdown-item" href="edit.php?id=<?= $user['id'] ?>">
                                         <i class="fa fa-edit"></i>
                                         Редактировать</a>
-                                    <a class="dropdown-item" href="page_security.php?edit&id=<?= $user['id'] ?>">
+                                    <a class="dropdown-item" href="page_security.php?id=<?= $user['id'] ?>">
                                         <i class="fa fa-lock"></i>
                                         Безопасность</a>
-                                    <a class="dropdown-item" href="status.php?edit&id=<?= $user['id'] ?>">
+                                    <a class="dropdown-item" href="page_status.php?id=<?= $user['id'] ?>">
                                         <i class="fa fa-sun"></i>
                                         Установить статус</a>
-                                    <a class="dropdown-item" href="media.php/edit?id=<?= $user['id'] ?>">
+                                    <a class="dropdown-item" href="media.php?id=<?= $user['id'] ?>">
                                         <i class="fa fa-camera"></i>
                                         Загрузить аватар
                                     </a>

@@ -65,14 +65,14 @@ $img = $user['img']?$user['img']:"";
                                 <small class="text-muted mb-0"><?= $address ?></small>
                             </h5>
                             <div class="mt-4 text-center demo">
-                                <a href="javascript:void(0);" class="fs-xl" style="color:#C13584">
-                                    <i class="fab fa-instagram"><?= $instagram ?></i>
+                                <a href="<?= $instagram ?>" class="fs-xl" style="color:#C13584">
+                                    <i class="fab fa-instagram"></i>
                                 </a>
-                                <a href="javascript:void(0);" class="fs-xl" style="color:#4680C2">
-                                    <i class="fab fa-vk"><?= $vk ?></i>
+                                <a href="<?= $vk ?>" class="fs-xl" style="color:#4680C2">
+                                    <i class="fab fa-vk"></i>
                                 </a>
-                                <a href="javascript:void(0);" class="fs-xl" style="color:#0088cc">
-                                    <i class="fab fa-telegram"><?= $telegram ?></i>
+                                <a href="<?= $telegram ?>" class="fs-xl" style="color:#0088cc">
+                                    <i class="fab fa-telegram"></i>
                                 </a>
                             </div>
                         </div>
@@ -81,7 +81,7 @@ $img = $user['img']?$user['img']:"";
                         <div class="p-3 text-center">
                             <a href="tel:<?= $phone ?>" class="mt-1 d-block fs-sm fw-400 text-dark">
                                 <i class="fas fa-mobile-alt text-muted mr-2"></i> <?= $phone ?></a>
-                            <a href="mailto:oliver.kopyov@marlin.ru" class="mt-1 d-block fs-sm fw-400 text-dark">
+                            <a href="mailto:<?= $email ?>" class="mt-1 d-block fs-sm fw-400 text-dark">
                                 <i class="fas fa-mouse-pointer text-muted mr-2"></i> <?= $email ?></a>
                             <address class="fs-sm fw-400 mt-4 text-muted">
                                 <i class="fas fa-map-pin mr-2"></i> <?= $address ?>

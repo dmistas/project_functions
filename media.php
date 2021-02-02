@@ -1,6 +1,16 @@
 <?php
 session_start();
 include_once "functions.php";
+if (is_not_logged_in()){
+    redirect_to('page_login.php');
+    exit();
+}
+// если нет id перенаправляем на страницу пользователей
+if (!isset($_GET['id'])){
+    redirect_to('users.php');
+    exit();
+}
+
 
 
 ?>

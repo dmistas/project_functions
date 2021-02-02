@@ -90,9 +90,9 @@ include_once 'functions.php';
                             <div class="form-group">
                                 <label class="form-label" for="example-select">Выберите статус</label>
                                 <select class="form-control" id="example-select" name="status">
-                                    <option>Онлайн</option>
-                                    <option>Отошел</option>
-                                    <option>Не беспокоить</option>
+                                    <option value="online">Онлайн</option>
+                                    <option value="offline">Отошел</option>
+                                    <option value="dnd">Не беспокоить</option>
                                 </select>
                             </div>
 
