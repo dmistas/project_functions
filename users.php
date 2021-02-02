@@ -103,7 +103,7 @@ $set_status_array = [
                                     <a class="dropdown-item" href="page_status.php?id=<?= $user['id'] ?>">
                                         <i class="fa fa-sun"></i>
                                         Установить статус</a>
-                                    <a class="dropdown-item" href="media.php?id=<?= $user['id'] ?>">
+                                    <a class="dropdown-item" href="page_media.php?id=<?= $user['id'] ?>">
                                         <i class="fa fa-camera"></i>
                                         Загрузить аватар
                                     </a>

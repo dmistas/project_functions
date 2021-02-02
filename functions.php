@@ -46,6 +46,16 @@ function create_upload_file_name(array $file)
     return uniqid() . "." . $ext;
 }
 
+/**
+ * Проверка есть ли файл картинки по пути
+ *
+ * @param string $image_path
+ *
+ * @return boolean
+ */
+function has_image(string $image_path){
+    return file_exists($image_path);
+}
 
 /**
  * Загрузить изображение аватара
